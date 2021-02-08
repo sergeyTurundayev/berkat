@@ -34,13 +34,15 @@ $last_page_link = $last_page[0]->getAttribute('href');
 
 $pages = explode('=', $last_page_link)[1];
 
-var_dump( $pages );
+echo "pages: $pages\n";
 
 $pages_url = $url . "board?page=";
 
 $pages = 1;
 
 for( $i = 1; $i <= $pages; $i++ ) {
+
+	echo "page: $i\n";
 
 	$page_url = $pages_url . $i;
 
@@ -96,8 +98,6 @@ for( $i = 1; $i <= $pages; $i++ ) {
 		}
 
 		$tmp_arr["images"] = $product_imgs_arr;
-
-		// var_dump( $price );
 
 		if( $price ){
 			$price = $price[0]->text();
