@@ -8,7 +8,6 @@ $fp = fopen('result.php', "w");
 
 $url = 'https://berkat.ru/';
 
-// Создаем поток
 $opts = array(
   'http'=>array(
     'method'=>"POST",
@@ -23,7 +22,6 @@ $opts = array(
 
 $context = stream_context_create($opts);
 
-// Открываем файл с помощью установленных выше HTTP-заголовков
 $file = file_get_contents($url, false, $context);
 
 $document = new Document($file, false);
