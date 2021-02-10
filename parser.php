@@ -41,7 +41,9 @@ $result = [];
 
 for ($i = 1; $i <= $pages; $i++) {
 
-    if($i == 2) break; // delete
+    if($i == 2) {
+        break; // delete
+    }
 
     echo 'page: ' . $i . PHP_EOL;
 
