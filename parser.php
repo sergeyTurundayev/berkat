@@ -1,10 +1,11 @@
 <?php
 
+ini_set('display_errors', true);
+ini_set('error_reporting', E_ALL);
+
 require 'vendor/autoload.php';
 
 use DiDom\Document;
-
-$fp = fopen('result.php', "w");
 
 $url = 'https://berkat.ru/';
 
@@ -38,7 +39,9 @@ $pages_url = $url . "board?page=";
 
 $pages = 1;
 
-for( $i = 1; $i <= $pages; $i++ ) {
+$result = [];
+
+for ($i = 1; $i <= $pages; $i++) {
 
 	echo "page: $i\n";
 
@@ -52,65 +55,23 @@ for( $i = 1; $i <= $pages; $i++ ) {
 
 	$products = $document->find('.board_list_item');
 
+	foreach ($products as $index => $product) {
+		$result[] = [
+            'title' => $product->first('h3')->text(),
+            'description' => $product->first('.board_list_item_text')->text(),
+            'name' => trim($product->first('span:nth-child(5)')->text()),
+            'city' => trim($product->first('span:nth-child(7)')->text()),
+            'phone' => $product->has('.get_phone_style') ? trim($product->first('.get_phone_style')->text()) : '-',
+            'price' => $product->has('.board_list_footer_left b') ? $product->first('.board_list_footer_left b')->text() : '-',
+            'images' => array_map(function ($img) {
+                return $img->href;
+            }, $product->find('.photos a')),
+        ];
 
-	foreach ($products as $product) {
-
-		$tmp_arr = [];
-
-		$product_html = $product->html();
-
-		$product_html = new Document($product_html, false);
-
-		$product_h3 = $product_html->find('h3');
-
-		$tmp_arr["title"] = $product_h3[0]->text();
-
-		$product_desc = $product_html->find('.board_list_item_text');
-
-		$tmp_arr["description"] = $product_desc[0]->text();
-
-		$name = $product_html->find('span:nth-child(5)');
-
-		$tmp_arr["name"] = trim( $name[0]->text() );
-
-		$city = $product_html->find('span:nth-child(7)');
-
-		$tmp_arr["city"] = trim( $city[0]->text() );
-
-		$phone = $product_html->find('.get_phone_style');
-
-		if( $phone ){
-			$tmp_arr["phone"] = $phone[0]->text();
-		}else{
-			$tmp_arr["phone"] = "-";
-		}
-
-		$price = $product_html->find('.board_list_footer_left b');
-
-		$product_imgs = $product_html->find('.photos a');
-
-		$product_imgs_arr = [];
-
-		foreach ($product_imgs as $img) {
-			$product_imgs_arr[] = $img->href;
-		}
-
-		$tmp_arr["images"] = $product_imgs_arr;
-
-		if( $price ){
-			$price = $price[0]->text();
-		} else {
-			$price = "-";
-		}
-
-		$tmp_arr["price"] = $price;
-
-		$tmp_json = json_encode( $tmp_arr, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES );
-
-		fwrite($fp, $tmp_json . ",\n" );
-
+        echo $foo;
 	}
 }
 
+$resultEncoded = json_encode( $result, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES );
 
-fclose( $fp );
+file_put_contents('result.json', $resultEncoded);
