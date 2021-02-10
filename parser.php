@@ -11,12 +11,12 @@ $url = 'https://berkat.ru/';
 
 $opts = array(
   'http'=>array(
-    'method'=>"POST",
-    'header'=>"Accept-language: ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7\r\n" .
-    "referer: https://www.work.ua/jobs/3058159/\r\n" .
-    "content-type: application/json\r\n" .
-    "user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36\r\n" .
-    "x-requested-with: XMLHttpRequest",
+    'method'=>'POST',
+    'header'=>'Accept-language: ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7\r\n' .
+    'referer: https://www.work.ua/jobs/3058159/\r\n' .
+    'content-type: application/json\r\n' .
+    'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36\r\n' .
+    'x-requested-with: XMLHttpRequest',
     'content-length' => 0
 )
 );
