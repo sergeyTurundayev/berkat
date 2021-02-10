@@ -27,48 +27,46 @@ $file = file_get_contents($url, false, $context);
 
 $document = new Document($file, false);
 
-$last_page = $document->find('.pagebar_pages a:last-child');
+$lastPage = $document->find('.pagebar_pages a:last-child');
 
-$last_page_link = $last_page[0]->getAttribute('href');
+$lastPageLink = $lastPage[0]->getAttribute('href');
 
-$pages = explode('=', $last_page_link)[1];
+$pages = explode('=', $lastPageLink)[1];
 
-echo "pages: $pages\n";
+echo 'pages: ' . $pages . "\n";
 
-$pages_url = $url . "board?page=";
-
-$pages = 1;
+$pagesUrl = $url . 'board?page=';
 
 $result = [];
 
 for ($i = 1; $i <= $pages; $i++) {
 
-	echo "page: $i\n";
+    if($i == 2) break; // delete
 
-	$page_url = $pages_url . $i;
+	echo 'page: ' . $i . "\n";
 
-	echo "$page_url\n";
+	$pageUrl = $pagesUrl . $i;
+
+	echo "$pageUrl\n";
 
 	$context = stream_context_create($opts);
-	$file = file_get_contents($page_url, false, $context);
+	$file = file_get_contents($pageUrl, false, $context);
 	$document = new Document($file, false);
 
-	$products = $document->find('.board_list_item');
+	$productsEl = $document->find('.board_list_item');
 
-	foreach ($products as $index => $product) {
+	foreach ($productsEl as $index => $productEl) {
 		$result[] = [
-            'title' => $product->first('h3')->text(),
-            'description' => $product->first('.board_list_item_text')->text(),
-            'name' => trim($product->first('span:nth-child(5)')->text()),
-            'city' => trim($product->first('span:nth-child(7)')->text()),
-            'phone' => $product->has('.get_phone_style') ? trim($product->first('.get_phone_style')->text()) : '-',
-            'price' => $product->has('.board_list_footer_left b') ? $product->first('.board_list_footer_left b')->text() : '-',
+            'title' => $productEl->first('h3')->text(),
+            'description' => $productEl->first('.board_list_item_text')->text(),
+            'name' => trim($productEl->first('span:nth-child(5)')->text()),
+            'city' => trim($productEl->first('span:nth-child(7)')->text()),
+            'phone' => $productEl->has('.get_phone_style') ? trim($productEl->first('.get_phone_style')->text()) : '-',
+            'price' => $productEl->has('.board_list_footer_left b') ? $productEl->first('.board_list_footer_left b')->text() : '-',
             'images' => array_map(function ($img) {
                 return $img->href;
-            }, $product->find('.photos a')),
+            }, $productEl->find('.photos a')),
         ];
-
-        echo $foo;
 	}
 }
 
